@@ -131,8 +131,7 @@
 				"fields[{$order}][default_keys]", $this->get('default_keys')
 			));
 			$label->appendChild(
-				new XMLElement('p', __('You can optionally assign values by using a double colon: "<code>key::value</code>".<br />
-					If you want to use a comma in your key or value, you need to escape it: "<code>Red\\, Green or Blue</code>".'), array('class' => 'help'))
+				new XMLElement('p', __('You can optionally assign values by using a double colon: %s.', array('<code>' . __('key::value') . '</code>')) . '<br />' . __('If you want to use a comma in your key or value, you need to escape it, e. g. %s.', array('<code>' . __('Red\\, Green or Blue') . '</code>')), array('class' => 'help'))
 			);
 
 			$group->appendChild($label);
@@ -149,19 +148,21 @@
 			$group->appendChild($div);
 			$wrapper->appendChild($group);
 
-			// Automatic delete
-			$label = Widget::Label();
-			$input = Widget::Input('fields['.$order.'][delete_empty_keys]', 'yes', 'checkbox');
+			// Default options
+			$div = new XMLElement('div', null, array('class' => 'two columns'));
+			$this->appendRequiredCheckbox($div);
+			$this->appendShowColumnCheckbox($div);
 
+			// Automatic delete
+			$label = Widget::Label(null, null, 'column');
+			$input = Widget::Input('fields['.$order.'][delete_empty_keys]', 'yes', 'checkbox');
+			
 			if ($this->get('delete_empty_keys') == '1') $input->setAttribute('checked', 'checked');
 
 			$label->setValue(__('%s Automatically delete empty keys', array($input->generate())));
 
-			$wrapper->appendChild($label);
-
-			// Defaults
-			$this->appendRequiredCheckbox($wrapper);
-			$this->appendShowColumnCheckbox($wrapper);
+			$div->appendChild($label);
+			$wrapper->appendChild($div);
 		}
 
 		/**
